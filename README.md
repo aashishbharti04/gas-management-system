@@ -54,9 +54,30 @@ optionally supports **MySQL** for multi-user or networked deployments.
 
 ## 📸 Screenshots
 
-> _Captured from a live terminal session._
+### 🌐 Web Dashboard
 
-**Main menu**
+| Light mode | Dark mode |
+| :--------: | :-------: |
+| ![Dashboard (light)](docs/assets/dashboard-light.png) | ![Dashboard (dark)](docs/assets/dashboard-dark.png) |
+
+**Customers** — searchable list with live filtering
+
+![Customers](docs/assets/customers.png)
+
+**New bill** — record a CNG/LPG purchase
+
+![Billing](docs/assets/billing.png)
+
+<table>
+  <tr>
+    <td align="center"><b>Responsive (mobile)</b></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/assets/login-mobile.png" alt="Mobile login" width="280" /></td>
+  </tr>
+</table>
+
+### 🖥️ Terminal CLI
 
 ```
 ┌───────────────────────────── Menu ──────────────────────────────┐
@@ -69,20 +90,6 @@ optionally supports **MySQL** for multi-user or networked deployments.
 │   0   Log out & exit                                             │
 └──────────────────────────────────────────────────────────────────┘
 ```
-
-**Generated invoice**
-
-```
-┌──────────────── Invoice · Aasha Devi ─────────────────┐
-│ Item    Litres     Rate       Amount                  │
-│ CNG          2   Rs.75.00     Rs.150.00               │
-│ ─────────────────────────────────────────             │
-│ Total                          Rs.150.00              │
-└────────────────────────────────────────────────────────┘
-```
-
-> 💡 Replace these with real screenshots by adding images to a `docs/assets/`
-> folder and referencing them here, e.g. `![Menu](docs/assets/menu.png)`.
 
 ---
 
