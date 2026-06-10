@@ -1,0 +1,9 @@
+# Runtime dependencies for the Gas Management System.
+# For development tooling see requirements-dev.txt.
+rich>=13.0.0
+
+# Optional backends / helpers (uncomment as needed, or use extras):
+#   pip install gas-management-system[mysql]
+#   pip install gas-management-system[dotenv]
+# mysql-connector-python>=8.0.0
+# python-dotenv>=1.0.0

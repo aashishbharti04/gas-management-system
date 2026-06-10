@@ -1,0 +1,67 @@
+# ---- Secrets & local config ----
+.env
+.env.*
+!.env.example
+
+# ---- Application data ----
+*.db
+*.sqlite
+*.sqlite3
+gas_management.db
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ---- Virtual environments ----
+.venv/
+venv/
+env/
+ENV/
+
+# ---- Testing & coverage ----
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.tox/
+.nox/
+.ruff_cache/
+.mypy_cache/
+
+# ---- IDE / editor ----
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ---- OS ----
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- Misc local artifacts ----
+smoke*.out
+smoke*.db
+_e2e_*.py

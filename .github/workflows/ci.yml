@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint (Ruff)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Ruff
+        run: python -m pip install --upgrade pip ruff
+      - name: Ruff check
+        run: ruff check .
+      - name: Ruff format check
+        run: ruff format --check .
+
+  test:
+    name: Test (Python ${{ matrix.python-version }} on ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install package with dev extras
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      - name: Run test suite
+        run: pytest --cov --cov-report=term-missing
+
+  build:
+    name: Build & deployment-ready check
+    runs-on: ubuntu-latest
+    needs: [lint, test]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build distribution
+        run: |
+          python -m pip install --upgrade pip build
+          python -m build
+      - name: Verify the package installs and imports
+        run: |
+          pip install dist/*.whl
+          python -c "import gas_management; print('gas_management', gas_management.__version__)"
+          python -c "from gas_management.cli import main; print('entry point OK')"
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/*

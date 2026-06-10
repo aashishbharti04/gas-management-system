@@ -1,0 +1,9 @@
+# Normalise line endings: store text as LF in the repository.
+* text=auto eol=lf
+
+# Explicit binary types (never touched).
+*.docx binary
+*.db    binary
+*.png   binary
+*.jpg   binary
+*.gif   binary
