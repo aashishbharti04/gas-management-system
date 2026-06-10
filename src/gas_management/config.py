@@ -48,6 +48,13 @@ def _get_float(name: str, default: float) -> float:
         raise ConfigurationError(f"{name} must be a number, got {raw!r}") from exc
 
 
+def _get_bool(name: str, default: bool) -> bool:
+    raw = os.environ.get(name)
+    if raw is None or raw == "":
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "on"}
+
+
 def _get_int(name: str, default: int) -> int:
     raw = os.environ.get(name)
     if raw is None or raw == "":
@@ -83,6 +90,12 @@ class Settings:
     admin_username: str = "admin"
     admin_password: str = "admin123"
 
+    # Web dashboard settings (used by the optional FastAPI front-end).
+    web_host: str = "127.0.0.1"
+    web_port: int = 8000
+    web_secret_key: str = ""  # used to sign session cookies; auto-generated if empty
+    web_cookie_secure: bool = False  # set True when serving over HTTPS
+
     @classmethod
     def from_env(cls) -> Settings:
         """Build settings from the current environment."""
@@ -102,4 +115,8 @@ class Settings:
             currency_symbol=os.environ.get("GMS_CURRENCY_SYMBOL", "Rs."),
             admin_username=os.environ.get("GMS_ADMIN_USERNAME", "admin"),
             admin_password=os.environ.get("GMS_ADMIN_PASSWORD", "admin123"),
+            web_host=os.environ.get("GMS_WEB_HOST", "127.0.0.1"),
+            web_port=_get_int("GMS_WEB_PORT", 8000),
+            web_secret_key=os.environ.get("GMS_WEB_SECRET_KEY", ""),
+            web_cookie_secure=_get_bool("GMS_WEB_COOKIE_SECURE", False),
         )

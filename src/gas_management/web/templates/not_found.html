@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Not found{% endblock %}
+
+{% block content %}
+<section class="card state-card">
+  <div class="state-icon" aria-hidden="true">🧭</div>
+  <h1>Not found</h1>
+  <p class="muted">{{ message or "The page you requested could not be found." }}</p>
+  <a href="/" class="btn btn-primary">Back to dashboard</a>
+</section>
+{% endblock %}

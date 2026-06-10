@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}New Customer{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>New Customer</h1>
+    <p class="muted">Create a customer account.</p>
+  </div>
+  <a href="/customers" class="btn btn-ghost">← Back</a>
+</div>
+
+<section class="card form-card">
+  {% if error %}
+  <div class="flash flash--error" role="alert">{{ error }}</div>
+  {% endif %}
+
+  <form method="post" action="/customers" class="form" novalidate>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+
+    <div class="form-row">
+      <div class="field">
+        <label for="account_no">Account number</label>
+        <input id="account_no" name="account_no" type="text" required
+          value="{{ form.account_no or '' }}" placeholder="e.g. ACC100" />
+        <small class="hint">3–20 characters: letters, digits, “-” or “_”.</small>
+      </div>
+      <div class="field">
+        <label for="name">Customer name</label>
+        <input id="name" name="name" type="text" required value="{{ form.name or '' }}" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="address">Address</label>
+      <input id="address" name="address" type="text" required value="{{ form.address or '' }}" />
+    </div>
+
+    <div class="form-row">
+      <div class="field">
+        <label for="phone">Phone <span class="muted">(optional)</span></label>
+        <input id="phone" name="phone" type="tel" value="{{ form.phone or '' }}"
+          placeholder="+91 99999-99999" />
+      </div>
+      <div class="field">
+        <label for="credit_balance">Opening credit ({{ currency }})</label>
+        <input id="credit_balance" name="credit_balance" type="number" min="0" step="0.01"
+          value="{{ form.credit_balance or '0' }}" />
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Create customer</button>
+      <a href="/customers" class="btn btn-ghost">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}New Bill{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Record Gas Purchase</h1>
+    <p class="muted">Generate an invoice and update the customer's balances.</p>
+  </div>
+</div>
+
+<section class="card form-card">
+  {% if error %}
+  <div class="flash flash--error" role="alert">{{ error }}</div>
+  {% endif %}
+
+  <form method="post" action="/billing" class="form" data-billing novalidate>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+
+    <div class="field">
+      <label for="account_no">Customer account number</label>
+      <input id="account_no" name="account_no" type="text" required
+        value="{{ form.account_no or '' }}" placeholder="e.g. ACC100" />
+    </div>
+
+    <fieldset class="field">
+      <legend>Gas type</legend>
+      <div class="radio-row">
+        <label class="radio">
+          <input type="radio" name="gas_type" value="CNG"
+            {% if form.gas_type == 'CNG' or not form.gas_type %}checked{% endif %} />
+          <span>CNG <small class="muted">({{ currency }}{{ '%g'|format(settings.cng_price) }}/L)</small></span>
+        </label>
+        <label class="radio">
+          <input type="radio" name="gas_type" value="LPG" {% if form.gas_type == 'LPG' %}checked{% endif %} />
+          <span>LPG <small class="muted">({{ currency }}{{ '%g'|format(settings.lpg_price) }}/L)</small></span>
+        </label>
+        <label class="radio">
+          <input type="radio" name="gas_type" value="BOTH" {% if form.gas_type == 'BOTH' %}checked{% endif %} />
+          <span>Both</span>
+        </label>
+      </div>
+    </fieldset>
+
+    <div class="form-row">
+      <div class="field" data-cng-field>
+        <label for="cng_litres">CNG litres</label>
+        <input id="cng_litres" name="cng_litres" type="number" min="0" step="0.01"
+          value="{{ form.cng_litres or '' }}" />
+      </div>
+      <div class="field" data-lpg-field>
+        <label for="lpg_litres">LPG litres</label>
+        <input id="lpg_litres" name="lpg_litres" type="number" min="0" step="0.01"
+          value="{{ form.lpg_litres or '' }}" />
+      </div>
+    </div>
+
+    <label class="checkbox">
+      <input type="checkbox" name="pay_from_credit" value="1"
+        {% if form.pay_from_credit %}checked{% endif %} />
+      <span>Pay using the customer's credit balance</span>
+    </label>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Generate invoice</button>
+      <a href="/customers" class="btn btn-ghost">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

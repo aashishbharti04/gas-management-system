@@ -16,10 +16,15 @@
 
 ## 📖 Project Overview
 
-**Gas Management System** is a command-line application for small gas distributors to
-manage customer accounts, generate CNG/LPG invoices, and track outstanding balances
-and credit. It began life as a student project and has been re-engineered into a
-clean, secure, well-tested, production-ready open-source tool.
+**Gas Management System** helps small gas distributors manage customer accounts,
+generate CNG/LPG invoices, and track outstanding balances and credit. It began life
+as a student project and has been re-engineered into a clean, secure, well-tested,
+production-ready open-source tool.
+
+It ships with **two front-ends that share the same code and data**:
+
+- 🖥️ a premium **terminal CLI** (`rich`-powered), and
+- 🌐 an optional **web dashboard** (FastAPI + server-rendered, dark/light, responsive).
 
 It runs out of the box with a built-in **SQLite** database (zero configuration) and
 optionally supports **MySQL** for multi-user or networked deployments.
@@ -33,6 +38,7 @@ optionally supports **MySQL** for multi-user or networked deployments.
 
 ## ✨ Features
 
+- 🖥️🌐 **CLI *and* web dashboard** — same services, same database, your choice of interface.
 - 🔐 **Secure login** with salted **PBKDF2-HMAC-SHA256** password hashing (no plaintext).
 - 👤 **Customer accounts** — create, view, search, list, and delete.
 - 🧾 **Automated billing** for CNG, LPG, or both, with configurable per-litre pricing.
@@ -106,6 +112,9 @@ pip install -e ".[dev]"
 
 #   with MySQL support:
 pip install ".[mysql]"
+
+#   with the web dashboard:
+pip install ".[web]"
 ```
 
 ---
@@ -142,6 +151,39 @@ prompted to change it via environment variables. After logging in you’ll see t
 
 ---
 
+## 🌐 Web Dashboard
+
+A modern, optional web dashboard ships alongside the CLI and shares the **same
+database and login accounts**.
+
+```bash
+pip install ".[web]"
+
+# Generate a session secret (recommended for anything beyond local testing)
+export GMS_WEB_SECRET_KEY="$(python -c 'import secrets;print(secrets.token_urlsafe(48))')"
+
+gas-management-web            # or: python -m gas_management.web
+# → open http://127.0.0.1:8000
+```
+
+Dashboard features:
+
+- **Login** using the same hashed credentials as the CLI (secure signed sessions).
+- **At-a-glance stats** — customer count, total dues, total credit, litres sold.
+- **Customers** — searchable list (with skeleton-loading live search), create, view, delete.
+- **Billing** — record CNG/LPG purchases and view a generated invoice.
+- 🌗 **Dark & light mode** (remembers your choice; respects system preference).
+- 📱 **Responsive** layout for mobile, tablet, and desktop.
+- ♿ **Accessible** — semantic HTML, skip link, focus states, `aria` attributes,
+  reduced-motion support, and colour pairs that don't rely on colour alone.
+- 🛡️ **Hardened** — CSRF protection on every form, strict security headers
+  (CSP, X-Frame-Options, etc.), HttpOnly/SameSite session cookies.
+
+> Configure host/port/secret/cookie-security via `GMS_WEB_*` variables — see
+> [Configuration](#️-configuration-guide) and [`.env.example`](.env.example).
+
+---
+
 ## ⚙️ Configuration Guide
 
 All configuration is via environment variables (optionally loaded from a local `.env`
@@ -161,6 +203,10 @@ file — copy [`.env.example`](.env.example) to `.env`). **No secret is ever har
 | `GMS_CURRENCY_SYMBOL` | `Rs.` | Currency symbol for display. |
 | `GMS_ADMIN_USERNAME` | `admin` | Seeded admin username (first run only). |
 | `GMS_ADMIN_PASSWORD` | `admin123` | Seeded admin password (first run only). |
+| `GMS_WEB_HOST` | `127.0.0.1` | Web dashboard bind host. |
+| `GMS_WEB_PORT` | `8000` | Web dashboard port. |
+| `GMS_WEB_SECRET_KEY` | _(auto)_ | Secret for signing session cookies (set in production). |
+| `GMS_WEB_COOKIE_SECURE` | `false` | Mark session cookies `Secure` (enable behind HTTPS). |
 
 ---
 

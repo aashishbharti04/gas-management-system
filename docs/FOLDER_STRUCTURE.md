@@ -31,13 +31,23 @@ gas-management-system/
 │       ├── models.py              # Dataclasses: User, Customer, Bill, GasType
 │       ├── config.py              # Env-based Settings + .env loader
 │       ├── exceptions.py          # Domain exception hierarchy
+│       ├── branding.py            # Shared app name / contact / social links
 │       ├── py.typed               # PEP 561 type marker
-│       └── db/                    # Persistence layer
-│           ├── __init__.py        # Exposes Repository + factory
-│           ├── base.py            # Abstract Repository + shared SQLRepository
-│           ├── sqlite_repo.py     # SQLite backend (default)
-│           ├── mysql_repo.py      # MySQL backend (optional)
-│           └── factory.py         # Backend selector
+│       ├── db/                    # Persistence layer
+│       │   ├── __init__.py        # Exposes Repository + factory
+│       │   ├── base.py            # Abstract Repository + shared SQLRepository
+│       │   ├── sqlite_repo.py     # SQLite backend (default)
+│       │   ├── mysql_repo.py      # MySQL backend (optional)
+│       │   └── factory.py         # Backend selector
+│       └── web/                   # Optional FastAPI web dashboard
+│           ├── __init__.py        # create_app()
+│           ├── __main__.py        # `python -m gas_management.web` (uvicorn)
+│           ├── app.py             # App factory: middleware, security, routes
+│           ├── dependencies.py    # DI (settings/repo) + Jinja2 render helper
+│           ├── security.py        # Sessions, CSRF, auth guards
+│           ├── routers/           # auth, dashboard, customers, billing
+│           ├── templates/         # Jinja2 templates (base + pages)
+│           └── static/            # CSS design system, JS, favicon
 │
 ├── tests/
 │   ├── conftest.py                # Shared fixtures (in-memory repo, settings)

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Customers{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Customers</h1>
+    <p class="muted">Search, view, and manage customer accounts.</p>
+  </div>
+  <a href="/customers/new" class="btn btn-primary">+ New Customer</a>
+</div>
+
+<form class="search" method="get" action="/customers" role="search" data-search>
+  <label class="visually-hidden" for="q">Search customers</label>
+  <input id="q" name="q" type="search" value="{{ query }}"
+    placeholder="Search by name or account number…" autocomplete="off" />
+  <button type="submit" class="btn">Search</button>
+</form>
+
+<div class="card" data-results>
+  {% include "_customers_table.html" %}
+</div>
+{% endblock %}

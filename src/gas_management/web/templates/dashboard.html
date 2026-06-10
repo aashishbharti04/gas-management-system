@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Dashboard</h1>
+    <p class="muted">Overview of your gas customers and balances.</p>
+  </div>
+  <a href="/billing" class="btn btn-primary">+ New Bill</a>
+</div>
+
+<section class="stat-grid" aria-label="Key statistics">
+  <div class="card stat">
+    <div class="stat-label">Customers</div>
+    <div class="stat-value">{{ stats.customer_count }}</div>
+  </div>
+  <div class="card stat">
+    <div class="stat-label">Total Dues</div>
+    <div class="stat-value">{{ currency }}{{ '%.2f'|format(stats.total_due) }}</div>
+  </div>
+  <div class="card stat">
+    <div class="stat-label">Total Credit</div>
+    <div class="stat-value">{{ currency }}{{ '%.2f'|format(stats.total_credit) }}</div>
+  </div>
+  <div class="card stat">
+    <div class="stat-label">CNG Sold (L)</div>
+    <div class="stat-value">{{ '%g'|format(stats.total_cng) }}</div>
+  </div>
+  <div class="card stat">
+    <div class="stat-label">LPG Sold (L)</div>
+    <div class="stat-value">{{ '%g'|format(stats.total_lpg) }}</div>
+  </div>
+</section>
+
+<div class="grid-2">
+  <section class="card" aria-labelledby="attention-title">
+    <div class="card-head">
+      <h2 id="attention-title">Highest Outstanding Dues</h2>
+    </div>
+    {% if top_due %}
+    <table class="table">
+      <thead><tr><th>Customer</th><th>Account</th><th class="num">Due</th></tr></thead>
+      <tbody>
+        {% for c in top_due %}
+        <tr>
+          <td><a href="/customers/{{ c.account_no }}">{{ c.name }}</a></td>
+          <td>{{ c.account_no }}</td>
+          <td class="num"><span class="badge badge--due">{{ currency }}{{ '%.2f'|format(c.amount_due) }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty">
+      <div class="empty-icon" aria-hidden="true">✅</div>
+      <p>No outstanding dues. Everyone is settled up!</p>
+    </div>
+    {% endif %}
+  </section>
+
+  <section class="card" aria-labelledby="recent-title">
+    <div class="card-head">
+      <h2 id="recent-title">Recently Added</h2>
+      <a href="/customers" class="link">View all</a>
+    </div>
+    {% if recent %}
+    <ul class="list">
+      {% for c in recent %}
+      <li>
+        <a href="/customers/{{ c.account_no }}">{{ c.name }}</a>
+        <span class="muted">{{ c.account_no }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div class="empty">
+      <div class="empty-icon" aria-hidden="true">📭</div>
+      <p>No customers yet. <a href="/customers/new">Create your first one</a>.</p>
+    </div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

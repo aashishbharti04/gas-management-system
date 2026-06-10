@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Something went wrong{% endblock %}
+
+{% block content %}
+<section class="card state-card">
+  <div class="state-icon" aria-hidden="true">⚠️</div>
+  <h1>Something went wrong</h1>
+  <p class="muted">{{ message or "An unexpected error occurred. Please try again." }}</p>
+  <a href="/" class="btn btn-primary">Back to dashboard</a>
+</section>
+{% endblock %}

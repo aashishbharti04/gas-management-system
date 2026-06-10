@@ -38,11 +38,31 @@ This document describes how the Gas Management System is structured and why.
 - `cli.py` is the controller: it sequences prompts, calls services, and renders
   results. It contains no SQL and no business rules.
 
+### Two front-ends, one core
+
+Because `services.py` is free of console I/O, the project ships **two interchangeable
+presentation layers over the exact same business logic and storage**:
+
+- the **CLI** (`cli.py` + `ui.py`), and
+- the optional **web dashboard** (`web/`, FastAPI + Jinja2).
+
+The web layer adds only web concerns — routing, sessions, CSRF, security headers,
+templates, and CSS — and calls the same `services` functions and `Repository` the CLI
+uses. Brand/footer details live once in `branding.py` and are shared by both.
+
+```
+            ┌──────────── CLI (cli.py, ui.py) ────────────┐
+services ◀──┤                                              │
+   +        │                                              │
+Repository ◀┤                                              │
+            └──── Web (web/: routers, templates, static) ──┘
+```
+
 ### Business layer
 
 - `services.py` holds the use cases (`login`, `create_customer`, `record_purchase`,
   `seed_default_admin`). **It performs no console I/O**, so it can be unit-tested and
-  reused by another front-end (e.g. a web API).
+  reused by another front-end (e.g. the web dashboard).
 - `pricing.py` computes bills; `validators.py` validates/normalises input;
   `auth.py` handles password hashing and verification.
 - `models.py` defines plain `dataclass` domain objects (`User`, `Customer`, `Bill`).

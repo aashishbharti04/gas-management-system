@@ -9,6 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - _Nothing yet._
 
+## [1.1.0] - 2026-06-10
+
+### Added
+- 🌐 **Optional web dashboard** (FastAPI + Jinja2, server-rendered) that reuses the
+  same configuration, storage, authentication, and services as the CLI:
+  - Login sharing the CLI's hashed user accounts via signed sessions.
+  - Dashboard with at-a-glance stats and an "outstanding dues" list.
+  - Customer list with skeleton-loading live search, create, view, and delete.
+  - Billing form that records CNG/LPG purchases and renders an invoice.
+  - Dark/light themes (persisted, system-preference aware), responsive layout,
+    and accessibility (skip link, focus states, `aria`, reduced-motion).
+- Web security: per-session **CSRF** protection on all forms, strict security
+  headers (CSP, X-Frame-Options, Referrer-Policy, Permissions-Policy), and
+  HttpOnly + SameSite session cookies.
+- `gas-management-web` console script and `python -m gas_management.web` runner.
+- `[web]` install extra and `GMS_WEB_*` configuration variables.
+- `branding.py` to share app/contact/social metadata across the CLI and web.
+- `tests/test_web.py` covering auth, CSRF, and the full customer/billing flow.
+
 ## [1.0.0] - 2026-06-10
 
 The first stable, production-ready release. The original single-file prototype was
@@ -56,5 +75,6 @@ user-facing feature.
 ### Removed
 - Duplicate prototype scripts consolidated into a single, coherent package.
 
-[Unreleased]: https://github.com/aashishbharti04/gas-management-system/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/aashishbharti04/gas-management-system/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/aashishbharti04/gas-management-system/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/aashishbharti04/gas-management-system/releases/tag/v1.0.0

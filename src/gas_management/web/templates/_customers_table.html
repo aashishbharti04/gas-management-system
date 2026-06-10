@@ -1,0 +1,37 @@
+{% if customers %}
+<div class="table-scroll">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Account</th><th>Name</th><th>Phone</th>
+        <th class="num">CNG (L)</th><th class="num">LPG (L)</th>
+        <th class="num">Due</th><th class="num">Credit</th><th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in customers %}
+      <tr>
+        <td>{{ c.account_no }}</td>
+        <td><a href="/customers/{{ c.account_no }}">{{ c.name }}</a></td>
+        <td>{{ c.phone or '—' }}</td>
+        <td class="num">{{ '%g'|format(c.cng_litres) }}</td>
+        <td class="num">{{ '%g'|format(c.lpg_litres) }}</td>
+        <td class="num">{{ currency }}{{ '%.2f'|format(c.amount_due) }}</td>
+        <td class="num">{{ currency }}{{ '%.2f'|format(c.credit_balance) }}</td>
+        <td class="num"><a class="link" href="/customers/{{ c.account_no }}">View</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<p class="muted result-count">{{ customers|length }} customer(s).</p>
+{% else %}
+<div class="empty">
+  <div class="empty-icon" aria-hidden="true">🔍</div>
+  {% if query %}
+  <p>No customers match “{{ query }}”.</p>
+  {% else %}
+  <p>No customers yet. <a href="/customers/new">Create your first customer</a>.</p>
+  {% endif %}
+</div>
+{% endif %}

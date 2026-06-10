@@ -70,12 +70,43 @@ docker run -it --rm -v "$PWD/data:/data" \
 
 > Use `-it` so the interactive prompts work.
 
-## 4. Configuration via `.env`
+## 4. Web dashboard
+
+Install the web extra and run the server:
+
+```bash
+pip install ".[web]"
+
+export GMS_WEB_SECRET_KEY="$(python -c 'import secrets;print(secrets.token_urlsafe(48))')"
+export GMS_WEB_HOST=0.0.0.0           # bind on all interfaces if needed
+export GMS_WEB_PORT=8000
+gas-management-web                    # or: python -m gas_management.web
+```
+
+For production, run behind a process manager / reverse proxy and enable secure
+cookies when serving over HTTPS:
+
+```bash
+export GMS_WEB_COOKIE_SECURE=true
+
+# Multiple workers via uvicorn (the app factory is import-safe):
+uvicorn "gas_management.web.app:create_app" --factory \
+  --host 0.0.0.0 --port 8000 --workers 4
+```
+
+Put Nginx/Caddy in front to terminate TLS and forward to the app. The dashboard
+sends strict security headers (CSP, X-Frame-Options, Referrer-Policy) and uses
+signed, HttpOnly, SameSite=Lax session cookies.
+
+> ⚠️ Always set a strong, persistent `GMS_WEB_SECRET_KEY` in production — otherwise
+> an ephemeral key is generated and all sessions are invalidated on restart.
+
+## 5. Configuration via `.env`
 
 Copy `.env.example` to `.env` and edit. The file is git-ignored and loaded
 automatically at startup.
 
-## 5. Upgrades
+## 6. Upgrades
 
 ```bash
 git pull
@@ -85,7 +116,7 @@ pip install --upgrade .
 The schema uses `CREATE TABLE IF NOT EXISTS`, so existing data is preserved across
 upgrades. Review [CHANGELOG.md](../CHANGELOG.md) for breaking changes before upgrading.
 
-## 6. Backups
+## 7. Backups
 
 - **SQLite:** copy the `*.db` file while the app is not running.
 - **MySQL:** use `mysqldump gasin > backup.sql`.
@@ -97,3 +128,5 @@ upgrades. Review [CHANGELOG.md](../CHANGELOG.md) for breaking changes before upg
 - [ ] Database file/volume has restricted permissions.
 - [ ] `pytest` and `ruff check .` pass (CI green).
 - [ ] Backups scheduled.
+- [ ] (Web) `GMS_WEB_SECRET_KEY` set to a strong persistent value.
+- [ ] (Web) `GMS_WEB_COOKIE_SECURE=true` when served over HTTPS, behind a TLS proxy.

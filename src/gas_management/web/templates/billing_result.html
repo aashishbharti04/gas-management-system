@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Invoice{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Invoice</h1>
+    <p class="muted">Purchase recorded for {{ customer.name }} ({{ customer.account_no }}).</p>
+  </div>
+  <div class="page-actions">
+    <a href="/billing" class="btn btn-ghost">+ Another</a>
+    <a href="/customers/{{ customer.account_no }}" class="btn btn-primary">View customer</a>
+  </div>
+</div>
+
+<div class="flash flash--success" role="status">Purchase recorded and balances updated.</div>
+
+<div class="grid-2">
+  <section class="card invoice">
+    <div class="card-head"><h2>Bill</h2></div>
+    <table class="table">
+      <thead><tr><th>Item</th><th class="num">Litres</th><th class="num">Rate</th><th class="num">Amount</th></tr></thead>
+      <tbody>
+        {% if bill.cng_litres %}
+        <tr>
+          <td>CNG</td><td class="num">{{ '%g'|format(bill.cng_litres) }}</td>
+          <td class="num">{{ currency }}{{ '%g'|format(settings.cng_price) }}</td>
+          <td class="num">{{ currency }}{{ '%.2f'|format(bill.cng_amount) }}</td>
+        </tr>
+        {% endif %}
+        {% if bill.lpg_litres %}
+        <tr>
+          <td>LPG</td><td class="num">{{ '%g'|format(bill.lpg_litres) }}</td>
+          <td class="num">{{ currency }}{{ '%g'|format(settings.lpg_price) }}</td>
+          <td class="num">{{ currency }}{{ '%.2f'|format(bill.lpg_amount) }}</td>
+        </tr>
+        {% endif %}
+      </tbody>
+      <tfoot>
+        <tr><th colspan="3" class="num">Total</th>
+          <th class="num total">{{ currency }}{{ '%.2f'|format(bill.total) }}</th></tr>
+      </tfoot>
+    </table>
+  </section>
+
+  <section class="card">
+    <div class="card-head"><h2>Updated Balances</h2></div>
+    <dl class="detail">
+      <div>
+        <dt>Amount due</dt>
+        <dd><span class="badge {{ 'badge--due' if customer.amount_due > 0 else 'badge--ok' }}">
+          {{ currency }}{{ '%.2f'|format(customer.amount_due) }}</span></dd>
+      </div>
+      <div>
+        <dt>Credit balance</dt>
+        <dd><span class="badge badge--credit">{{ currency }}{{ '%.2f'|format(customer.credit_balance) }}</span></dd>
+      </div>
+      <div><dt>Total CNG</dt><dd>{{ '%g'|format(customer.cng_litres) }} L</dd></div>
+      <div><dt>Total LPG</dt><dd>{{ '%g'|format(customer.lpg_litres) }} L</dd></div>
+    </dl>
+  </section>
+</div>
+{% endblock %}

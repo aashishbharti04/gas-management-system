@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}{{ customer.name }}{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>{{ customer.name }}</h1>
+    <p class="muted">Account {{ customer.account_no }}</p>
+  </div>
+  <div class="page-actions">
+    <a href="/billing?account_no={{ customer.account_no }}" class="btn btn-primary">+ New Bill</a>
+    <form method="post" action="/customers/{{ customer.account_no }}/delete"
+      data-confirm="Permanently delete {{ customer.name }}? This cannot be undone.">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+      <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+  </div>
+</div>
+
+<div class="grid-2">
+  <section class="card">
+    <div class="card-head"><h2>Details</h2></div>
+    <dl class="detail">
+      <div><dt>Account No</dt><dd>{{ customer.account_no }}</dd></div>
+      <div><dt>Name</dt><dd>{{ customer.name }}</dd></div>
+      <div><dt>Address</dt><dd>{{ customer.address }}</dd></div>
+      <div><dt>Phone</dt><dd>{{ customer.phone or '—' }}</dd></div>
+      <div><dt>Customer since</dt><dd>{{ customer.created_at.strftime('%d %b %Y') }}</dd></div>
+    </dl>
+  </section>
+
+  <section class="card">
+    <div class="card-head"><h2>Balances &amp; Usage</h2></div>
+    <dl class="detail">
+      <div><dt>CNG purchased</dt><dd>{{ '%g'|format(customer.cng_litres) }} L</dd></div>
+      <div><dt>LPG purchased</dt><dd>{{ '%g'|format(customer.lpg_litres) }} L</dd></div>
+      <div>
+        <dt>Amount due</dt>
+        <dd><span class="badge {{ 'badge--due' if customer.amount_due > 0 else 'badge--ok' }}">
+          {{ currency }}{{ '%.2f'|format(customer.amount_due) }}</span></dd>
+      </div>
+      <div>
+        <dt>Credit balance</dt>
+        <dd><span class="badge badge--credit">{{ currency }}{{ '%.2f'|format(customer.credit_balance) }}</span></dd>
+      </div>
+    </dl>
+  </section>
+</div>
+{% endblock %}

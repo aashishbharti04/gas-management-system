@@ -23,19 +23,11 @@ from rich.text import Text
 from rich.theme import Theme
 
 from . import __version__
+from .branding import APP_NAME, CONTACT_EMAIL, SOCIAL_LINKS
 from .config import Settings
 from .models import Bill, Customer
 
-APP_NAME = "Gas Management System"
-
-# Author / project metadata used in the footer.
-CONTACT_EMAIL = "aashish@marketdoctorsonline.com"
-SOCIAL_LINKS = {
-    "LinkedIn": "https://in.linkedin.com/in/aashana1012",
-    "GitHub": "https://github.com/aashishbharti04",
-    "YouTube": "https://www.youtube.com/@CodeWithAsur",
-    "Instagram": "https://www.instagram.com/asurwave1012",
-}
+__all__ = ["APP_NAME", "CONTACT_EMAIL", "SOCIAL_LINKS", "console"]
 
 # A single theme keeps colour hierarchy consistent across the whole app.
 _THEME = Theme(

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Sign in{% endblock %}
+
+{% block content %}
+<div class="auth-wrap">
+  <section class="card auth-card" aria-labelledby="login-title">
+    <div class="auth-head">
+      <div class="brand-mark brand-mark--lg" aria-hidden="true">⛽</div>
+      <h1 id="login-title">{{ app_name }}</h1>
+      <p class="muted">{{ tagline }}</p>
+    </div>
+
+    {% if error %}
+    <div class="flash flash--error" role="alert">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" action="/login" class="form" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+      <input type="hidden" name="next" value="{{ next_url }}" />
+
+      <div class="field">
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" autocomplete="username"
+          value="{{ username or '' }}" required autofocus />
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password"
+          autocomplete="current-password" required />
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+    </form>
+
+    <p class="muted auth-hint">
+      First run? The default admin is <code>admin</code> / <code>admin123</code>.
+      Change it via environment variables.
+    </p>
+  </section>
+</div>
+{% endblock %}
