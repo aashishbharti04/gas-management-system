@@ -54,6 +54,12 @@ optionally supports **MySQL** for multi-user or networked deployments.
 
 ## 📸 Screenshots
 
+### ▶️ Live Walkthrough
+
+> Login → dashboard → create a customer → generate a CNG bill.
+
+![Walkthrough](docs/assets/walkthrough.gif)
+
 ### 🌐 Web Dashboard
 
 | Light mode | Dark mode |
